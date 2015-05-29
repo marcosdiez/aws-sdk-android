@@ -55,6 +55,8 @@ public class S3Signer extends AbstractAWSSigner {
      */
     private final String resourcePath;
 
+    private Date mDate = null;
+
     /**
      * Create a dummy instance of the S3Signer.
      */
@@ -72,9 +74,10 @@ public class S3Signer extends AbstractAWSSigner {
      * @param resourcePath The canonical S3 resource path (ex: "/",
      *            "/<bucket name>/", or "/<bucket name>/<key>".
      */
-    public S3Signer(String httpVerb, String resourcePath) {
+    public S3Signer(String httpVerb, String resourcePath, Date mDate) {
         this.httpVerb = httpVerb;
         this.resourcePath = resourcePath;
+        this.mDate = mDate;
 
         if (resourcePath == null)
             throw new IllegalArgumentException("Parameter resourcePath is empty");
@@ -110,7 +113,7 @@ public class S3Signer extends AbstractAWSSigner {
                 resourcePath, true);
 
         int timeOffset = getTimeOffset(request);
-        Date date = getSignatureDate(timeOffset);
+        Date date = getSignatureDate(timeOffset, mDate);
         request.addHeader(Headers.DATE, ServiceUtils.formatRfc822Date(date));
         String canonicalString = RestUtils.makeS3CanonicalString(
                 httpVerb, encodedResourcePath, request, null);

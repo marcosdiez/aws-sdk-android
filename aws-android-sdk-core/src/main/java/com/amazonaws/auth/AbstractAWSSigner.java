@@ -386,8 +386,13 @@ public abstract class AbstractAWSSigner implements Signer {
         return new String(bytes, UTF8);
     }
 
+
     protected Date getSignatureDate(int timeOffset) {
-        Date dateValue = new Date();
+        return getSignatureDate(timeOffset, null);
+    }
+
+    protected Date getSignatureDate(int timeOffset, Date mDate) {
+        Date dateValue = mDate != null ? mDate : new Date();
         if (timeOffset != 0) {
             long epochMillis = dateValue.getTime();
             epochMillis -= timeOffset * 1000;

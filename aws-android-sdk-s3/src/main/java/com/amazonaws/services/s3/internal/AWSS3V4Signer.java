@@ -26,6 +26,7 @@ import com.amazonaws.util.BinaryUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * AWS4 signer implementation for AWS S3
@@ -37,8 +38,8 @@ public class AWSS3V4Signer extends AWS4Signer {
      * Don't double-url-encode path elements; S3 expects path elements to be
      * encoded only once in the canonical URI.
      */
-    public AWSS3V4Signer() {
-        super(false);
+    public AWSS3V4Signer(Date mDate) {
+        super(false, mDate);
     }
 
     /**

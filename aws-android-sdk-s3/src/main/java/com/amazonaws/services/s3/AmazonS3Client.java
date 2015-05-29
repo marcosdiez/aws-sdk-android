@@ -266,6 +266,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     /** Whether or not this client has an explicit region configured. */
     private boolean hasExplicitRegion;
 
+    private Date mDate = null;
+
     /**
      * Constructs a new client to invoke service methods on Amazon S3. A
      * credentials provider chain will be used that searches for credentials in
@@ -320,9 +322,19 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
      * @see AmazonS3Client#AmazonS3Client()
      * @see AmazonS3Client#AmazonS3Client(AWSCredentials, ClientConfiguration)
      */
-    public AmazonS3Client(AWSCredentials awsCredentials) {
-        this(awsCredentials, new ClientConfiguration());
-    }
+     public AmazonS3Client(AWSCredentials awsCredentials)
+     {
+         this(awsCredentials, new ClientConfiguration());
+     }
+
+
+     public AmazonS3Client(AWSCredentials awsCredentials, Date date)
+     {
+         this(awsCredentials, new ClientConfiguration());
+         this.mDate = date;
+     }
+
+
 
     /**
      * Constructs a new Amazon S3 client using the specified AWS credentials and
@@ -3583,7 +3595,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         if (upgradeToSigV4() && !(signer instanceof AWSS3V4Signer)) {
 
-            AWSS3V4Signer v4Signer = new AWSS3V4Signer();
+            AWSS3V4Signer v4Signer = new AWSS3V4Signer(mDate);
 
             // Always set the service name; if the user has overridden it via
             // setEndpoint(String, String, String), this will return the right
@@ -3627,7 +3639,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                             ((key != null) ? key : "");
 
             return new S3Signer(request.getHttpMethod().toString(),
-                    resourcePath);
+                    resourcePath, this.mDate);
         }
 
         return signer;

@@ -87,6 +87,14 @@ public class AWS4Signer extends AbstractAWSSigner
         this.doubleUrlEncode = doubleUrlEncoding;
     }
 
+    private Date mDate=null;
+    public AWS4Signer(boolean doubleUrlEncoding, Date mDate) {
+        this.doubleUrlEncode = doubleUrlEncoding;
+        this.mDate = mDate;
+    }
+
+
+
     protected static final Log log = LogFactory.getLog(AWS4Signer.class);
 
     @Override
@@ -322,7 +330,7 @@ public class AWS4Signer extends AbstractAWSSigner
 
     protected final long getDateFromRequest(Request<?> request) {
         int timeOffset = getTimeOffset(request);
-        Date date = getSignatureDate(timeOffset);
+        Date date = getSignatureDate(timeOffset, mDate);
         if (overriddenDate != null)
             date = overriddenDate;
         return date.getTime();
